@@ -10,6 +10,46 @@ app.use(cors());
 const adapter = new JSONFile("db.json");
 const db = new Low(adapter);
 
+// Sign up
+app.post("/sign-up", async (req, res) => {
+  await db.read();
+
+  const existingUserWithEmail = db.data.users.find(
+    (user) => user.email === req.body.email
+  );
+  const existingUserWithUsername = db.data.users.find(
+    (user) => user.username === req.body.username
+  );
+
+  if (existingUserWithEmail) {
+    res
+      .status(401)
+      .send(
+        "This email has been registered before. Please use a different email or log in."
+      );
+    return;
+  }
+  if (existingUserWithUsername) {
+    res
+      .status(401)
+      .send(
+        "This username has been registered before. Please use a different username or log in."
+      );
+    return;
+  }
+
+  const newUser = {
+    ...req.body,
+    role: "user",
+    order: [],
+  };
+  db.data.users.push(newUser);
+
+  await db.write();
+
+  res.send({ role: newUser.role, id: newUser.id });
+});
+
 // Login
 app.post("/login", async (req, res) => {
   await db.read();
@@ -33,7 +73,7 @@ app.get("/swags", async (req, res) => {
   res.send(db.data.swags);
 });
 
-// Get all order (for User & Admin)
+// Fetch all order (for User & Admin)
 app.post("/my-order", async (req, res) => {
   await db.read();
   const user = db.data.users.find((user) => req.body.userId === user.id);
