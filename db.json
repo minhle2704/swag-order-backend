@@ -1,23 +1,23 @@
 {
   "users": [
     {
-      "id": 1,
-      "firstName": "John",
-      "lastName": "Smith",
-      "email": "john.smitch@gmail.com",
-      "username": "admin1",
-      "password": "password",
-      "role": "admin",
+      "firstName": "Tom",
+      "lastName": "Bui",
+      "email": "tom.bui@gmail.com",
+      "username": "tombui",
+      "password": "$2b$10$vV/zLNJ2ijhSCXJ8uR/a3eEC/nx2p8HxhKnxN5d7BMWJc6LRC7jhq",
+      "id": 2,
+      "role": "user",
       "orders": []
     },
     {
-      "id": 2,
       "firstName": "Jane",
       "lastName": "Doe",
       "email": "jane.doe@gmail.com",
-      "username": "user1",
-      "password": "password",
-      "role": "user",
+      "username": "janedoe",
+      "password": "$2b$10$5LR1CBb3SfSX0u6UBcwjL.85sA7Yr1e8.zU8QdRnfs7d1OVPw26HS",
+      "id": 1,
+      "role": "admin",
       "orders": []
     }
   ],

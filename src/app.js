@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
 import { Low, JSONFile } from "lowdb";
+import bcrypt from "bcrypt";
 
 const app = express();
 app.use(express.json());
@@ -38,10 +39,13 @@ app.post("/sign-up", async (req, res) => {
     return;
   }
 
+  const ids = db.data.users.map((user) => user.id);
   const newUser = {
     ...req.body,
+    id: Math.max(...ids) + 1,
+    password: await bcrypt.hash(req.body.password, 10),
     role: "user",
-    order: [],
+    orders: [],
   };
   db.data.users.push(newUser);
 
@@ -55,11 +59,14 @@ app.post("/login", async (req, res) => {
   await db.read();
 
   const user = db.data.users.find(
-    (user) =>
-      req.body.username === user.username && req.body.password === user.password
+    (user) => user.username === req.body.username
+  );
+  const isPasswordCorrect = await bcrypt.compare(
+    req.body.password,
+    user.password
   );
 
-  if (user) {
+  if (user && isPasswordCorrect) {
     res.send({ role: user.role, id: user.id });
   } else {
     res.sendStatus(401);
