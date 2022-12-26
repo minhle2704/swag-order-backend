@@ -51,7 +51,15 @@ app.post("/sign-up", async (req, res) => {
 
   await db.write();
 
-  res.send({ role: newUser.role, id: newUser.id });
+  res.send({
+    firstName: newUser.firstName,
+    lastName: newUser.lastName,
+    username: newUser.username,
+    role: newUser.role,
+    id: newUser.id,
+    email: newUser.email,
+    orders: newUser.orders,
+  });
 });
 
 // Login
@@ -67,7 +75,15 @@ app.post("/login", async (req, res) => {
   );
 
   if (user && isPasswordCorrect) {
-    res.send({ role: user.role, id: user.id });
+    res.send({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+      role: user.role,
+      id: user.id,
+      email: user.email,
+      orders: user.orders,
+    });
   } else {
     res.sendStatus(401);
   }
