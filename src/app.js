@@ -89,6 +89,33 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Change password
+app.post("/change-password", async (req, res) => {
+  await db.read();
+
+  const user = db.data.users.find((user) => user.id === req.body.userId);
+  const isPasswordCorrect = await bcrypt.compare(
+    req.body.currentPassword,
+    user.password
+  );
+
+  if (isPasswordCorrect) {
+    const newHashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+    db.data.users = db.data.users.map((user) =>
+      user.id === req.body.userId
+        ? { ...user, password: newHashedPassword }
+        : user
+    );
+
+    await db.write();
+
+    res.sendStatus(200);
+  } else {
+    res.status(401).send("You have entered a wrong password. Please try again");
+    return;
+  }
+});
+
 // Get all swags (for User & Admin)
 app.get("/swags", async (req, res) => {
   await db.read();
