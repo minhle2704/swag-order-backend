@@ -1,13 +1,12 @@
 import express from "express";
 import cors from "cors";
-import { v4 as uuidv4 } from "uuid";
 import { Low, JSONFile } from "lowdb";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import moment from "moment";
 
-import { generateTemporaryPassword } from "./helpers/index.js";
+import { generateTemporaryPassword, generateOrderId } from "./helpers/index.js";
 
 dotenv.config();
 
@@ -285,7 +284,7 @@ app.post("/commit-order", async (req, res) => {
 
   // Record user order
   const orderInfo = {};
-  orderInfo[uuidv4()] = Object.values(req.body.swagOrders);
+  orderInfo[generateOrderId()] = Object.values(req.body.swagOrders);
   db.data.users = db.data.users.map((user) =>
     user.id === req.body.userId
       ? {
